@@ -11,14 +11,14 @@ class StructMember:
         self._value = None
 
     @property
-    def name(self) -> str:
+    def name(self) -> Optional[str]:
         if self._name is None:
             strAddr = cs2.u64(self.memberAddr + Offset.StructMember.NAME)
             self._name = cs2.str(strAddr, 128)
         return self._name
 
     @property
-    def value(self) -> int:
+    def value(self) -> Optional[int]:
         if self._value is None:
             self._value = cs2.u64(self.memberAddr + Offset.StructMember.VALUE)
         return self._value

@@ -24,14 +24,14 @@ class StructClass:
 
 
     @property
-    def name(self) -> str:
+    def name(self) -> Optional[str]:
         if self._name is None:
             strAddr = cs2.u64(self.classAddr + Offset.StructClass.NAME)
             self._name = cs2.str(strAddr, 128)
         return self._name
 
     @property
-    def moduleName(self) -> str:
+    def moduleName(self) -> Optional[str]:
         if self._moduleName is None:
             strAddr = cs2.u64(self.classAddr + Offset.StructClass.MODULE_NAME)
             self._moduleName = cs2.str(strAddr, 128)
@@ -39,38 +39,38 @@ class StructClass:
 
 
     @property
-    def fieldsCount(self) -> int:
+    def fieldsCount(self) -> Optional[int]:
         if self._fieldCount is None:
             self._fieldCount = cs2.i16(self.classAddr + Offset.StructClass.FIELDS_COUNT)
         return self._fieldCount
 
     @property
-    def staticFieldsCount(self) -> int:
+    def staticFieldsCount(self) -> Optional[int]:
         if self._staticFieldCount is None:
             self._staticFieldCount = cs2.i16(self.classAddr + Offset.StructClass.STATIC_FIELDS_COUNT)
         return self._staticFieldCount
 
     @property
-    def staticMetaDataCount(self) -> int:
+    def staticMetaDataCount(self) -> Optional[int]:
         if self._staticMetaDataCount is None:
             self._staticMetaDataCount = cs2.i16(self.classAddr + Offset.StructClass.STATIC_METADATA_COUNT)
         return self._staticMetaDataCount
 
 
     @property
-    def fields(self) -> int:
+    def fields(self) -> Optional[int]:
         if self._fields is None:
             self._fields = cs2.u64(self.classAddr + Offset.StructClass.FIELDS)
         return self._fields
 
     @property
-    def staticFields(self) -> int:
+    def staticFields(self) -> Optional[int]:
         if self._staticFields is None:
             self._staticFields = cs2.u64(self.classAddr + Offset.StructClass.STATIC_FIELDS)
         return self._staticFields
 
     @property
-    def staticMetaData(self) -> int:
+    def staticMetaData(self) -> Optional[int]:
         if self._staticMetaData is None:
             self._staticMetaData = cs2.u64(self.classAddr + Offset.StructClass.STATIC_METADATA)
         return self._staticMetaData
@@ -83,7 +83,7 @@ class StructClass:
         return self._hasBaseClass
 
     @property
-    def baseClassAddr(self) -> int:
+    def baseClassAddr(self) -> Optional[int]:
         if self._baseClassAddr is None:
             baseClassAddr = cs2.u64(self.classAddr + Offset.StructClass.BASE_ADDRESS)
             baseClassAddr = cs2.u64(baseClassAddr + Offset.StructClass.FIELDS_INDEX)

@@ -1,3 +1,5 @@
+from typing import Optional
+
 from CS2 import cs2
 from Schema.Struct.StructTSHash import StructMemoryPool, StructHashBucket
 from Schema.Offset import Offset
@@ -12,10 +14,10 @@ class StructModule:
     def name(self) -> str:
         return cs2.str(self.moduleAddr + Offset.StructModule.NAME)
 
-    def classBindingsAddr(self) -> int:
+    def classBindingsAddr(self) -> Optional[int]:
         return self.moduleAddr + Offset.StructModule.CLASS_BINDINGS
 
-    def enumBindingAddr(self) -> int:
+    def enumBindingAddr(self) -> Optional[int]:
         return self.moduleAddr + Offset.StructModule.ENUM_BINDINGS
 
     def memPool(self, bindingAddr: int) -> StructMemoryPool:
