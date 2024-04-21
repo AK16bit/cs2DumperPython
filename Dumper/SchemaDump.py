@@ -1,7 +1,9 @@
+from copy import copy
 from functools import lru_cache
 from time import perf_counter
 from typing import Generator, List, Iterable, Tuple, Optional, Dict, Any, Union
 
+from Builder.SchemaBuilder import schemaBuilder
 from CS2 import cs2
 from Schema.Container import ContainerModule, ContainerClass, ContainerField, ContainerMember, ContainerEnum, ContainerMetadata
 from Schema.Struct.StructClass import StructClass
@@ -16,74 +18,21 @@ from Schema.Offset import Offset
 from utils import int2hex, logger, timeUseInfo, errorButDontCloseWindow
 
 
-# def dumpSchemaUnused():
-#     schemaSysAddr = getSchemaSysAddr()
-#     schemaSysStruct = StructSchemaSystem(schemaSysAddr)
-#
-#     moduleCnt = schemaSysStruct.moduleCnt()
-#     modulesAddr = [schemaSysStruct.moduleAddr(index) for index in range(moduleCnt)]
-#
-#
-#     for moduleAddr in modulesAddr:
-#         moduleStruct = StructModule(moduleAddr)
-#         moduleName = moduleStruct.name
-#
-#         if moduleName != "client.dll": continue
-#
-#         classBindingsAddr = moduleStruct.classBindingsAddr()
-#         print("classBindingsAddr: %s" % int2hex(classBindingsAddr))
-#         classBindingStruct = StructRBTree(classBindingsAddr)
-#         # print("entry Count: %s" % classBindingStruct.entryCount())
-#
-#
-#         print("element: %s" % int2hex(cs2.u64(classBindingsAddr + 0x08)))
-#         print("element: %s" % int2hex(classBindingStruct.elements()))
-#
-#         # 0x241EC4F09C8
-#
-#         # 0x241EC420000
-#         print()
-#         for elementIndex in range(0, 1 << 2):
-#             # declared_classes.elements 0x241EC420000
-#             # declared_class 2482159878144
-#             # declared_class.value 0x7FFED86EB9CB
-#             # declared_class.value.value 0x241EBF32AF0
-#             # declared_class.value.value.cast 2482154711792 0x241EBF32AF0
-#
-#             print("elementIndex:", elementIndex)
-#             ...
-#
-#             element = classBindingStruct.elements() + 0x18 * elementIndex
-#             # elementValue1 = cs2.u64(element + 0x08)
-#             elementValue2 = cs2.u64(element + 0x10)  # 0x08 + 0x08
-#             binding_ptr = cs2.u64(elementValue2)
-#             binding_ptr2 = cs2.u64(binding_ptr + 0x20)
-#
-#
-#             print("element:", element, int2hex(element))
-#             # print("elementValue1:", elementValue1, int2hex(elementValue1))
-#             print("elementValue2:", elementValue2, int2hex(elementValue2))
-#             print("binding_ptr:", binding_ptr, int2hex(binding_ptr))
-#
-#
-#
-#
-#             print()
-
-@timeUseInfo
 @errorButDontCloseWindow
+@timeUseInfo
 def dumpSchema() -> None:
     schemaSysAddr = readSchemaSysAddr()
     schemaSysStruct = StructSchemaSystem(schemaSysAddr)
 
     modulesCount = schemaSysStruct.modulesCount()
     modulesAddr: Generator[int, None, None] = (schemaSysStruct.moduleAddr(index) for index in range(modulesCount))
-
     modulesCtr: Generator[ContainerModule, None, None] = (readModule(moduleAddr) for moduleAddr in modulesAddr)
 
+    modulesDumpedCtr: List[ContainerModule] = list()
     for moduleCtr in modulesCtr:
         timeUseCounter = perf_counter()
 
+        moduleName = moduleCtr.get("name")
         moduleStruct = moduleCtr.get("struct")
         classesAddr = moduleCtr.get("classes")
         enumsAddr = moduleCtr.get("enums")
@@ -106,10 +55,13 @@ def dumpSchema() -> None:
             len(classesAddr),
             int2hex(moduleStruct.classBindingsAddr())
         ))
+        classesCtr = list()
         for classAddr in classesAddr:
             classCtr = readClass(classAddr)
             fields = classCtr.get("fields")
             metadata = classCtr.get("metadata")
+
+            classesCtr.append(classCtr)
 
             logger.debug(" ·  · %s -> Class: %s (Fields Count: %s) (Metadatas Count: %s)" % (
                 int2hex(classCtr.get("struct").classAddr),
@@ -124,10 +76,12 @@ def dumpSchema() -> None:
             len(enumsAddr),
             int2hex(moduleStruct.enumBindingAddr())
         ))
+        enumsCtr = list()
         for enumAddr in enumsAddr:
             enumCtr = readEnum(enumAddr)
-
             members = enumCtr.get("members")
+
+            enumsCtr.append(enumCtr)
 
             logger.debug(" ·  · %s -> Enum: %s (Members Count: %s)" % (
                 int2hex(enumCtr.get("struct").enumAddr),
@@ -135,8 +89,18 @@ def dumpSchema() -> None:
                 len(members)
             ))
 
+        moduleDumpedCtr = ContainerModule(name=moduleName, classes=classesCtr, enums=enumsCtr, struct=moduleStruct)
+        modulesDumpedCtr.append(moduleDumpedCtr)
+
         timeUse = (perf_counter() - timeUseCounter) * 1000
-        logger.debug("Module: %s Dump Finished in %s ms" % (moduleStruct.name, timeUse))
+        logger.debug("Module: %s Dump Finished in %s ms" % (
+            moduleStruct.name,
+            timeUse
+        ))
+
+    schemaBuilder(modulesDumpedCtr)
+
+
 
 
 

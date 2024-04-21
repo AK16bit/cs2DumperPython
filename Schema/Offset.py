@@ -3,15 +3,15 @@ from typing import Final
 
 class Offset:
     class StructMetadata:
-        NAME: Final[int] = 0x0
+        NAME: Final[int]          = 0x0
         NETWORK_VALUE: Final[int] = 0x8
         class StructNetworkValue:
-            NAME: Final[int] = 0x0
-            INT: Final[int] = 0x8
-            FLOAT: Final[int] = 0x10
+            NAME: Final[int]      = 0x0
+            INT: Final[int]       = 0x8
+            FLOAT: Final[int]     = 0x10
             VAR_VALUE: Final[int] = 0x20
             class StructVarValue:
-                NAME: Final[int] = 0x0
+                NAME: Final[int]      = 0x0
                 TYPE_NAME: Final[int] = 0x8
 
 
@@ -62,7 +62,7 @@ class Offset:
         SCHEMA_TYPE: Final[int]           = 0x58
 
         FIELDS_INDEX: Final[int]          = 0x20
-        METADATA_INDEX: Final[int]          = 0x20
+        METADATA_INDEX: Final[int]        = 0x20
 
 
     class StructTSHash:
@@ -103,6 +103,6 @@ class Offset:
         SCHEMA_SYSTEM_PATTERN: Final[str]            = "48 89 05 ?? ?? ?? ?? 4C 8D 45"
         SCHEMA_SYSTEM_PATTERN_RIP_OFFSET: Final[int] = 0x3
         SCHEMA_SYSTEM_PATTERN_RIP_LENGTH: Final[int] = 0x7
-        MODULES_COUNT: Final[int]                     = 0x190
+        MODULES_COUNT: Final[int]                    = 0x190
         MODULE_BASE: Final[int]                      = 0x198
         MODULE_BASE_INDEX: Final[int]                = 0x08

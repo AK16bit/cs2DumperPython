@@ -7,8 +7,9 @@ from Convar.Struct.StructConvarSystem import StructConvarSystem
 from utils import timeUseInfo, logger, int2hex, errorButDontCloseWindow
 
 
-@timeUseInfo
+
 @errorButDontCloseWindow
+@timeUseInfo
 def dumpConvar():
     convarSysAddr = readConvarSysAddr()
     convarSysStruct = StructConvarSystem(convarSysAddr)
@@ -28,7 +29,6 @@ def dumpConvar():
             logger.debug(" · %s -> Convar Address Error!" % (
                 int2hex(convarAddr)
             ))
-
             continue
 
         logger.debug(" · %s -> Convar: %s" % (

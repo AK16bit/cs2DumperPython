@@ -1,4 +1,4 @@
-from pyMeow.pyMeow import r_ctype, process_running, enum_modules, open_process, process_exists, pid_exists, r_byte, \
+from pyMeow.pyMeow import r_ctype, process_running, enum_modules, open_process, process_exists, pid_exists, r_bytes, \
     r_string
 
 from typing import Union, Generator, Any, Optional
@@ -45,8 +45,8 @@ class ProcessMemory:
     def bool(self, address: int, return_ctype: bool = False) -> Optional[Union[bool, c_bool]]:
         return self._regularRead(address, c_bool, return_ctype)
 
-    def byte(self, address: int, size: int = 50) -> Optional[Any]:
-        try: bytes = r_byte(self.process, address, size)
+    def bytes(self, address: int, size: int = 50) -> Optional[Any]:
+        try: bytes = r_bytes(self.process, address, size)
         except Exception: return None
 
         return bytes

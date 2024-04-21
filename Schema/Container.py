@@ -8,11 +8,6 @@ from Schema.Struct.StructMetadata import StructMetadata
 from Schema.Struct.StructModule import StructModule
 
 
-class Container:
-    ...
-
-
-
 class ContainerMetadata(TypedDict):
     name: str
     value: int

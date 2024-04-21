@@ -64,7 +64,8 @@ def timeUseInfo(func: Callable):
 def errorButDontCloseWindow(func: Callable):
     def wrapper(*args, **kwargs):
         try: return func(*args, **kwargs)
-        except Exception:
+        except Exception as error:
+            logger.error(error)
             system("pause.")
             exit()
     return wrapper
