@@ -1,16 +1,35 @@
+from ctypes import windll
+from logging import info, error, debug
 from os import mkdir, system
-from os.path import exists
+from platform import system as system_name
 from time import sleep, perf_counter
 
 from CS2 import CS2Process, isCS2ProcessExist, isCS2ProcessReady
-from utils import logger, ASCII_BASAGANNIDARR_MEDIUM, ASCII_AK32767_SMALL
+from utils import ASCII_BASAGANNIDARR_MEDIUM, ASCII_AK32767_SMALL, loggerSetup
 
 
 def main(signature: bool = True, schema: bool = True, convar: bool = False) -> None:
-    while not isCS2ProcessExist(): sleep(0.1)
-    while not isCS2ProcessReady(): sleep(0.5)
+    if not system_name() == "Windows":
+        error("No Support For Non-Windows Systems.")
+        system("pause")
+        exit()
+
+    if not windll.shell32.IsUserAnAdmin():
+        error("Please Run As Administrator.")
+        system("pause")
+        exit()
+
+    if not isCS2ProcessExist():
+        info("Wait For Counter-Strike 2 Process...")
+        while not isCS2ProcessExist(): sleep(0.1)
+    if not isCS2ProcessReady():
+        info("Wait For Counter-Strike 2 Initialization Complete...")
+        while not isCS2ProcessReady(): sleep(0.5)
 
     cs2 = CS2Process()
+    info("Counter-Strike 2 Found.")
+    debug("Process ID: %s" % cs2.pid)
+    debug("Process Handle: %s" % cs2.handle)
     timeUseCounter = perf_counter()
 
     if signature:
@@ -25,13 +44,14 @@ def main(signature: bool = True, schema: bool = True, convar: bool = False) -> N
         dumpConvar()
 
     timeUse = (perf_counter() - timeUseCounter) * 1000
-    logger.info("All Dump Finished in %s ms" % timeUse)
+    info("All Dump Finished in %s ms" % timeUse)
 
     system("pause.")
 
 
 if __name__ == '__main__':
-    [logger.info(strLine) for strLine in ASCII_BASAGANNIDARR_MEDIUM.split("\n")]
+    loggerSetup()
+    [info(strLine) for strLine in ASCII_BASAGANNIDARR_MEDIUM.split("\n")]
     # [logger.info(strLine) for strLine in ASCII_AK32767_SMALL.split("\n")]
 
     main(True, True)

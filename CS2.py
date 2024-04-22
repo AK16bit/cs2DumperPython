@@ -26,7 +26,17 @@ def isCS2ProcessExist() -> bool:
 
 def isCS2ProcessReady() -> bool:
     cs2 = meow.Process(CS2Process.processName)
-    return False not in [meow.pyMeow.module_exists(cs2.process, moduleName) for moduleName in ("client.dll", "engine2.dll", "schemasystem.dll", "tier0.dll")]
+    return False not in [
+        meow.pyMeow.module_exists(cs2.process, moduleName)
+        for moduleName in (
+            "client.dll",
+            "engine2.dll",
+            "inputsystem.dll",
+            "matchmaking.dll",
+            "schemasystem.dll",
+            "tier0.dll"
+        )
+    ]
 
 
 

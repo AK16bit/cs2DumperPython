@@ -1,3 +1,4 @@
+from logging import debug
 from time import perf_counter
 from typing import List
 
@@ -9,7 +10,7 @@ from Signature.Signature.SignatureClient import clientSignatures
 from Signature.Signature.SignatureEngine import engineSignatures
 from Signature.Signature.SignatureInputsystem import inputsystemSignatures
 from Signature.Signature.SignatureMatchmaking import matchmakingSignatures
-from utils import logger, int2hex, timeUseInfo, errorButDontCloseWindow
+from utils import int2hex, timeUseInfo, errorButDontCloseWindow
 
 
 @errorButDontCloseWindow
@@ -29,7 +30,7 @@ def clientSignature() -> ContainerModule:
     patterns = clientSignatures()
     timeUseCounter = perf_counter()
 
-    logger.debug("Module: %s (Count: %s)" % (
+    debug("Module: %s (Count: %s)" % (
         cs2.client.name,
         len(patterns)
     ))
@@ -42,7 +43,7 @@ def clientSignature() -> ContainerModule:
         signatureCtr = ContainerSignature(name=signatureName, value=signature.offset)
         signaturesCtr.append(signatureCtr)
 
-        logger.debug(" · %s -> Signature: %s (Address: %s) (Offset: %s)" % (
+        debug(" · %s -> Signature: %s (Address: %s) (Offset: %s)" % (
             signature.pattern,
             signatureName,
             int2hex(signature.address),
@@ -53,7 +54,7 @@ def clientSignature() -> ContainerModule:
     signaturesCtr = [*signaturesCtr, *buttonSignaturesCtr]
 
     timeUse = (perf_counter() - timeUseCounter) * 1000
-    logger.debug("Module: %s Dump Finished in %s ms" % ("client.dll", timeUse))
+    debug("Module: %s Dump Finished in %s ms" % ("client.dll", timeUse))
 
     return ContainerModule(name=cs2.client.name.replace(".", "_"), signatures=signaturesCtr)
 
@@ -62,7 +63,7 @@ def engineSignature() -> ContainerModule:
     patterns = engineSignatures()
     timeUseCounter = perf_counter()
 
-    logger.debug("Module: %s (base: %s) (size: %s)" % (
+    debug("Module: %s (base: %s) (size: %s)" % (
         cs2.engine.name,
         int2hex(cs2.engine.base),
         int2hex(cs2.engine.size)
@@ -76,7 +77,7 @@ def engineSignature() -> ContainerModule:
         signatureCtr = ContainerSignature(name=signatureName, value=signature.offset)
         signaturesCtr.append(signatureCtr)
 
-        logger.debug(" · %s -> Signature: %s (Address: %s) (Offset: %s)" % (
+        debug(" · %s -> Signature: %s (Address: %s) (Offset: %s)" % (
             signature.pattern,
             signatureName,
             int2hex(signature.address),
@@ -84,7 +85,7 @@ def engineSignature() -> ContainerModule:
         ))
 
     timeUse = (perf_counter() - timeUseCounter) * 1000
-    logger.debug("Module: %s Dump Finished in %s ms" % ("engine2.dll", timeUse))
+    debug("Module: %s Dump Finished in %s ms" % ("engine2.dll", timeUse))
 
     return ContainerModule(name=cs2.engine.name.replace(".", "_"), signatures=signaturesCtr)
 
@@ -92,7 +93,7 @@ def inputsystemSignature() -> ContainerModule:
     patterns = inputsystemSignatures()
     timeUseCounter = perf_counter()
 
-    logger.debug("Module: %s (base: %s) (size: %s)" % (
+    debug("Module: %s (base: %s) (size: %s)" % (
         cs2.inputSystem.name,
         int2hex(cs2.inputSystem.base),
         int2hex(cs2.inputSystem.size)
@@ -106,7 +107,7 @@ def inputsystemSignature() -> ContainerModule:
         signatureCtr = ContainerSignature(name=signatureName, value=signature.offset)
         signaturesCtr.append(signatureCtr)
 
-        logger.debug(" · %s -> Signature: %s (Address: %s) (Offset: %s)" % (
+        debug(" · %s -> Signature: %s (Address: %s) (Offset: %s)" % (
             signature.pattern,
             signatureName,
             int2hex(signature.address),
@@ -114,7 +115,7 @@ def inputsystemSignature() -> ContainerModule:
         ))
 
     timeUse = (perf_counter() - timeUseCounter) * 1000
-    logger.debug("Module: %s Dump Finished in %s ms" % ("inputSystem.dll", timeUse))
+    debug("Module: %s Dump Finished in %s ms" % ("inputSystem.dll", timeUse))
 
     return ContainerModule(name=cs2.inputSystem.name.replace(".", "_"), signatures=signaturesCtr)
 
@@ -122,7 +123,7 @@ def matchmakingSignature() -> ContainerModule:
     patterns = matchmakingSignatures()
     timeUseCounter = perf_counter()
 
-    logger.debug("Module: %s (base: %s) (size: %s)" % (
+    debug("Module: %s (base: %s) (size: %s)" % (
         cs2.matchmaking.name,
         int2hex(cs2.matchmaking.base),
         int2hex(cs2.matchmaking.size)
@@ -136,7 +137,7 @@ def matchmakingSignature() -> ContainerModule:
         signatureCtr = ContainerSignature(name=signatureName, value=signature.offset)
         signaturesCtr.append(signatureCtr)
 
-        logger.debug(" · %s -> Signature: %s (Address: %s) (Offset: %s)" % (
+        debug(" · %s -> Signature: %s (Address: %s) (Offset: %s)" % (
             signature.pattern,
             signatureName,
             int2hex(signature.address),
@@ -144,7 +145,7 @@ def matchmakingSignature() -> ContainerModule:
         ))
 
     timeUse = (perf_counter() - timeUseCounter) * 1000
-    logger.debug("Module: %s Dump Finished in %s ms" % ("matchmaking.dll", timeUse))
+    debug("Module: %s Dump Finished in %s ms" % ("matchmaking.dll", timeUse))
 
     return ContainerModule(name=cs2.matchmaking.name.replace(".", "_"), signatures=signaturesCtr)
 

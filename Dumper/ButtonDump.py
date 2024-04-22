@@ -1,3 +1,4 @@
+from logging import debug, error
 from typing import Optional, List
 
 from CS2 import cs2
@@ -5,7 +6,7 @@ from Signature.Button.Offset import Offset
 from Signature.Button.Struct.StructButton import StructButton
 from Signature.Button.Struct.StructButtonSystem import StructButtonSystem
 from Signature.Container import ContainerSignature, ContainerModule
-from utils import errorButDontCloseWindow, logger, int2hex
+from utils import errorButDontCloseWindow, int2hex
 
 
 @errorButDontCloseWindow
@@ -21,7 +22,7 @@ def buttonSignature() -> ContainerModule:
 
         buttons.append(buttonStruct)
 
-        logger.debug(" · %s -> Signature: %s (Address: %s) (Offset: %s)" % (
+        debug(" · %s -> Signature: %s (Address: %s) (Offset: %s)" % (
             int2hex(buttonAddr),
             buttonStruct.get("name"),
             int2hex(cs2.client.base + buttonStruct.get("value")),
@@ -39,7 +40,7 @@ def readButtonSysAddr() -> Optional[int]:
         buttonSysAddr = cs2.client.pattern(Offset.StructButtonSystem.BUTTON_SYSTEM_PATTERN)
         buttonSysAddr = buttonSysAddr + cs2.i32(buttonSysAddr + Offset.StructButtonSystem.BUTTON_SYSTEM_PATTERN_RIP_OFFSET) + Offset.StructButtonSystem.BUTTON_SYSTEM_PATTERN_RIP_LENGTH
     except Exception:
-        logger.error("Convar: Convar System Pattern Invalid!")
+        error("Convar: Convar System Pattern Invalid!")
         return None
 
     return buttonSysAddr

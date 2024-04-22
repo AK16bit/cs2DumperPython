@@ -1,3 +1,4 @@
+from logging import error, info
 from os import system
 from time import perf_counter
 from typing import Callable
@@ -10,7 +11,7 @@ def instantiation(cls):
     return cls()
 
 
-def _loggerSetup():
+def loggerSetup():
     from logging import getLogger, StreamHandler, Formatter, INFO, WARNING, ERROR, DEBUG
 
     class ColoredFormatter(Formatter):
@@ -33,12 +34,10 @@ def _loggerSetup():
         "\033[1;97m%(message)s\033[0m",
     ))))
 
-    logger = getLogger(None)
+    logger = getLogger()
     logger.addHandler(handler)
     logger.setLevel(DEBUG)
     return logger
-
-logger = _loggerSetup()
 
 
 def timeUseInfo(func: Callable):
@@ -47,13 +46,13 @@ def timeUseInfo(func: Callable):
             func.__code__.co_filename.split("\\")[-1],
             func.__name__,
         )
-        logger.info("Dumper: %s Run" % funcName)
+        info("Dumper: %s Run" % funcName)
 
         timeUseCounter = perf_counter()
         result = func(*args, **kwargs)
         timeUse = (perf_counter() - timeUseCounter) * 1000
 
-        logger.info("Dumper: %s Finished in %s ms" % (
+        info("Dumper: %s Finished in %s ms" % (
             funcName,
             timeUse
         ))
@@ -64,8 +63,8 @@ def timeUseInfo(func: Callable):
 def errorButDontCloseWindow(func: Callable):
     def wrapper(*args, **kwargs):
         try: return func(*args, **kwargs)
-        except Exception as error:
-            logger.error(error)
+        except Exception as exception:
+            error(exception)
             system("pause.")
             exit()
     return wrapper

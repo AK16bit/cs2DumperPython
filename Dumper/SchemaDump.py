@@ -1,5 +1,6 @@
 from copy import copy
 from functools import lru_cache
+from logging import debug, error
 from time import perf_counter
 from typing import Generator, List, Iterable, Tuple, Optional, Dict, Any, Union
 
@@ -15,7 +16,7 @@ from Schema.Struct.StructModule import StructModule
 from Schema.Struct.StructSchemaSystem import StructSchemaSystem
 from Schema.Struct.StructTSHash import StructHashBucket, StructUnAllocatedClassBase, StructAllocatedClassBase
 from Schema.Offset import Offset
-from utils import int2hex, logger, timeUseInfo, errorButDontCloseWindow
+from utils import int2hex, timeUseInfo, errorButDontCloseWindow
 
 
 @errorButDontCloseWindow
@@ -37,7 +38,7 @@ def dumpSchema() -> None:
         classesAddr = moduleCtr.get("classes")
         enumsAddr = moduleCtr.get("enums")
 
-        logger.debug("Module: %s (%s)" % (
+        debug("Module: %s (%s)" % (
             moduleStruct.name,
             int2hex(moduleStruct.moduleAddr)
         ))
@@ -51,7 +52,7 @@ def dumpSchema() -> None:
         #     for classAddr in classesAddrList
         # }
 
-        logger.debug(" · Classes (Count: %s) -> Binding: %s" % (
+        debug(" · Classes (Count: %s) -> Binding: %s" % (
             len(classesAddr),
             int2hex(moduleStruct.classBindingsAddr())
         ))
@@ -63,7 +64,7 @@ def dumpSchema() -> None:
 
             classesCtr.append(classCtr)
 
-            logger.debug(" ·  · %s -> Class: %s (Fields Count: %s) (Metadatas Count: %s)" % (
+            debug(" ·  · %s -> Class: %s (Fields Count: %s) (Metadatas Count: %s)" % (
                 int2hex(classCtr.get("struct").classAddr),
                 classCtr.get("name"),
                 len(fields),
@@ -72,7 +73,7 @@ def dumpSchema() -> None:
 
             # print(fields)
 
-        logger.debug(" · Enums (Count: %s) -> Binding: %s" % (
+        debug(" · Enums (Count: %s) -> Binding: %s" % (
             len(enumsAddr),
             int2hex(moduleStruct.enumBindingAddr())
         ))
@@ -83,7 +84,7 @@ def dumpSchema() -> None:
 
             enumsCtr.append(enumCtr)
 
-            logger.debug(" ·  · %s -> Enum: %s (Members Count: %s)" % (
+            debug(" ·  · %s -> Enum: %s (Members Count: %s)" % (
                 int2hex(enumCtr.get("struct").enumAddr),
                 enumCtr.get("name"),
                 len(members)
@@ -93,7 +94,7 @@ def dumpSchema() -> None:
         modulesDumpedCtr.append(moduleDumpedCtr)
 
         timeUse = (perf_counter() - timeUseCounter) * 1000
-        logger.debug("Module: %s Dump Finished in %s ms" % (
+        debug("Module: %s Dump Finished in %s ms" % (
             moduleStruct.name,
             timeUse
         ))
@@ -109,7 +110,7 @@ def readSchemaSysAddr() -> Optional[int]:
         schemaSysAddr = cs2.schemaSystem.pattern(Offset.StructSchemaSystem.SCHEMA_SYSTEM_PATTERN)
         schemaSysAddr = schemaSysAddr + cs2.i32(schemaSysAddr + Offset.StructSchemaSystem.SCHEMA_SYSTEM_PATTERN_RIP_OFFSET) + Offset.StructSchemaSystem.SCHEMA_SYSTEM_PATTERN_RIP_LENGTH
     except Exception:
-        logger.error("Schema: Schema System Pattern Invalid!")
+        error("Schema: Schema System Pattern Invalid!")
         return None
 
     return schemaSysAddr
