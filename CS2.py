@@ -40,4 +40,4 @@ def isCS2ProcessReady() -> bool:
 
 
 
-cs2: CS2Process = CS2Process
+cs2: CS2Process

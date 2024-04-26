@@ -16,23 +16,37 @@ def loggerSetup():
 
     class ColoredFormatter(Formatter):
         def format(self, record):
+            # record.levelname = {
+            #     DEBUG: f'\033[95m[{record.levelname}]\033[0m',
+            #     INFO: f'\033[92m[{record.levelname}]\033[0m',
+            #     WARNING: f'\033[93m[{record.levelname}]\033[0m',
+            #     ERROR: f'\033[91m[{record.levelname}]\033[0m',
+            # }.get(record.levelno, record.levelname)
             record.levelname = {
-                DEBUG: f'\033[95m[{record.levelname}]\033[0m',
-                INFO: f'\033[92m[{record.levelname}]\033[0m',
-                WARNING: f'\033[93m[{record.levelname}]\033[0m',
-                ERROR: f'\033[91m[{record.levelname}]\033[0m',
+                DEBUG: f'[{record.levelname}]',
+                INFO: f'[{record.levelname}]',
+                WARNING: f'[{record.levelname}]',
+                ERROR: f'[{record.levelname}]',
             }.get(record.levelno, record.levelname)
+
 
             return super().format(record)
 
     handler = StreamHandler()
+    # handler.setFormatter(ColoredFormatter(" ".join((
+    #     "%(levelname)s",
+    #     "\033[1;32m[%(asctime)s]\033[0m",
+    #     # "\033[1;35m[%(filename)s:%(lineno)s]\033[0m",
+    #     "\033[1;35m[%(filename)s]\033[0m",
+    #     "\033[1;97m%(message)s\033[0m",
+    # ))))
     handler.setFormatter(ColoredFormatter(" ".join((
         "%(levelname)s",
-        "\033[1;32m[%(asctime)s]\033[0m",
-        # "\033[1;35m[%(filename)s:%(lineno)s]\033[0m",
-        "\033[1;35m[%(filename)s]\033[0m",
-        "\033[1;97m%(message)s\033[0m",
+        "[%(asctime)s]",
+        "[%(filename)s]",
+        "%(message)s",
     ))))
+
 
     logger = getLogger()
     logger.addHandler(handler)
