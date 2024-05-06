@@ -9,7 +9,9 @@ def engineSignatures() -> Sequence[Callable]:
         dwBuildNumber,
         dwNetworkGameClient, dwNetworkGameClient_deltaTick, dwNetworkGameClient_getLocalPlayer,
         dwNetworkGameClient_getMaxClients, dwNetworkGameClient_signOnState,
-        dwWindowHeight, dwWindowWidth
+        dwWindowHeight, dwWindowWidth,
+        dwSoundService,
+        dwEngineViewData
     )
 
 
@@ -69,3 +71,19 @@ def dwWindowWidth() -> Pattern:
         .search()
         .rip(2, 6)
     )
+
+def dwSoundService() -> Pattern:
+    return (
+        Pattern("48 89 05 ?? ?? ?? ?? 4C 8D 44 24 ?? 48 8D 05", cs2.engine)
+        .search()
+        .rip()
+    )
+
+def dwEngineViewData() -> Pattern:
+    return (
+        Pattern("48 89 05 ?? ?? ?? ?? 4C 8D 44 24 ?? 48 8D 05", cs2.engine)
+        .search()
+        .rip()
+        .add(0x9C)
+    )
+
