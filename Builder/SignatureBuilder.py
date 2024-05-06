@@ -14,11 +14,27 @@ def signatureBuilder(modulesCtr: Sequence[ContainerModule]) -> None:
     for moduleCtr in modulesCtr:
         moduleName = moduleCtr.get("name")
 
-        moduleDict = {
+        moduleSignatureDict = {
             signature.get("name"): signature.get("value")
             for signature in moduleCtr.get("signatures")
         }
-        moduleJson = dumps(moduleDict, indent=4)
+        moduleSignatureJson = dumps(moduleSignatureDict, indent=4)
 
-        with open(join(outputLocation, "%s.json" % moduleName), "w") as moduleFile:
-            moduleFile.write(moduleJson)
+        with open(join(outputLocation, "%s.json" % moduleName.replace(".", "_")), "w") as moduleSignatureFile:
+            moduleSignatureFile.write(moduleSignatureJson)
+
+    configDict = dict()
+    for moduleCtr in modulesCtr:
+        moduleName = moduleCtr.get("name")
+
+        moduleConfigDict = [
+            signatureConfig
+            for signature in moduleCtr.get("signatures")
+            if (signatureConfig := signature.get("config")) is not None
+        ]
+        configDict.update({
+            moduleName: moduleConfigDict
+        })
+    configJson = dumps(configDict, indent=4)
+    with open(join(outputLocation, "%s.json" % "config"), "w") as configFile:
+        configFile.write(configJson)

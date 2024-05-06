@@ -34,7 +34,7 @@ def isCS2ProcessReady() -> bool:
             "inputsystem.dll",
             "matchmaking.dll",
             "schemasystem.dll",
-            "tier0.dll"
+            # "tier0.dll"
         )
     ]
 
