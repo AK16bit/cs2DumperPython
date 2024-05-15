@@ -1,11 +1,11 @@
 from ctypes import windll
 from logging import info, error, debug
-from os import mkdir, system
+from os import system
 from platform import system as system_name
 from time import sleep, perf_counter
 
 from CS2 import CS2Process, isCS2ProcessExist, isCS2ProcessReady
-from utils import ASCII_BASAGANNIDARR_MEDIUM, ASCII_AK32767_SMALL, loggerSetup
+from utils import ASCII_BASAGANNIDARR_MEDIUM, loggerSetup
 
 
 def main(signature: bool = True, schema: bool = True, convar: bool = False) -> None:

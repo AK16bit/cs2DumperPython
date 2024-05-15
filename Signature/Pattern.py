@@ -11,8 +11,10 @@ class Pattern:
         self._config: Dict = dict(
             name=None,
             pattern=None,
+            module=None,
             operations=list()
         )
+        self._config.update(dict(module=module.name))
 
         self.pattern = pattern
         if isinstance(module, str):
@@ -48,10 +50,8 @@ class Pattern:
         return self
 
     def add(self, value: int) -> Self:
-        address = self._address
-        address = address + value
+        self._address = self._address + value
 
-        self._address = address
         self._config.get("operations").append(dict(
             type="add",
             value=value
@@ -60,9 +60,8 @@ class Pattern:
 
     def rip(self, offset: int = 3, length: int = 7) -> Self:
         address = self._address
-        address = address + cs2.i32(address + offset) + length
+        self._address = address + cs2.i32(address + offset) + length
 
-        self._address = address
         self._config.get("operations").append(dict(
             type="rip",
             offset=offset,
@@ -71,11 +70,9 @@ class Pattern:
         return self
 
     def slice(self, start: int, end: int) -> Self:
-        address = self._address
-        address = cs2.bytes(address + start, end - start)
-        address = int.from_bytes(address, byteorder="little")
+        address = cs2.bytes(self._address + start, end - start)
+        self._address = int.from_bytes(address, byteorder="little")
 
-        self._address = address
         self._config.get("operations").append(dict(
             type="slice",
             start=start,
@@ -84,10 +81,7 @@ class Pattern:
         return self
 
     def read(self) -> Self:
-        address = self._address
-        address = cs2.u64(address)
-
-        self._address = address
+        self._address = cs2.u64(self._address)
         self._config.get("operations").append(dict(
             type="read"
         ))

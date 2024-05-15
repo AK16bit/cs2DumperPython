@@ -15,7 +15,7 @@ class CS2Process(meow.Process):
         self.inputSystem = modules.get("inputsystem.dll")
         self.matchmaking = modules.get("matchmaking.dll")
         self.schemaSystem = modules.get("schemasystem.dll")
-        self.tier0 = modules.get("tier0.dll")
+        # self.tier0 = modules.get("tier0.dll")
 
         global cs2
         cs2 = self
