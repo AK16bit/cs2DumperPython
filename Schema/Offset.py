@@ -95,14 +95,14 @@ class Offset:
 
     class StructModule:
         NAME: Final[int]           = 0x08
-        CLASS_BINDINGS: Final[int] = 0x5C0
-        ENUM_BINDINGS: Final[int]  = 0x2E50
+        CLASS_BINDINGS: Final[int] = 0x500
+        ENUM_BINDINGS: Final[int]  = 0x2D90
 
 
     class StructSchemaSystem:
-        SCHEMA_SYSTEM_PATTERN: Final[str]            = "48 89 05 ?? ?? ?? ?? 4C 8D 45"
+        SCHEMA_SYSTEM_PATTERN: Final[str]            = "48 89 05 ?? ?? ?? ?? 4C 8D 0D ?? ?? ?? ?? 0F B6 45 ?? 4C 8D 45 ?? 33 F6"
         SCHEMA_SYSTEM_PATTERN_RIP_OFFSET: Final[int] = 0x3
         SCHEMA_SYSTEM_PATTERN_RIP_LENGTH: Final[int] = 0x7
-        MODULES_COUNT: Final[int]                    = 0x190
-        MODULE_BASE: Final[int]                      = 0x198
+        MODULES_COUNT: Final[int]                    = 0x188
+        MODULE_BASE: Final[int]                      = 0x188 + 0x8
         MODULE_BASE_INDEX: Final[int]                = 0x08

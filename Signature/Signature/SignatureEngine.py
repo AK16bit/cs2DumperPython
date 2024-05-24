@@ -31,6 +31,14 @@ def engineSignatures() -> Sequence[Pattern]:
         .setName("dwNetworkGameClient")
     )
 
+    # dwNetworkGameClient_clientTickCount
+    yield (
+        Pattern("8B 81 ?? ?? ?? ?? C3 CC CC CC CC CC CC CC CC CC 8B 81 ?? ?? ?? ?? C3 CC CC CC CC CC CC CC CC CC 83 B9", cs2.engine)
+        .search()
+        .slice(2, 4)
+        .setName("dwNetworkGameClient_clientTickCount")
+    )
+
     # dwNetworkGameClient_deltaTick
     yield (
         Pattern("89 83 ?? ?? ?? ?? 40 B7", cs2.engine)
@@ -39,21 +47,37 @@ def engineSignatures() -> Sequence[Pattern]:
         .setName("dwNetworkGameClient_deltaTick")
     )
 
-    # dwNetworkGameClient_getLocalPlayer
+    # dwNetworkGameClient_isBackgroundMap
     yield (
-        Pattern("48 83 C0 ?? 48 8D 04 40 8B 0C C1 48 8B C2 89 0A C3 C7 02", cs2.engine)
+        Pattern("0F B6 81 ?? ?? ?? ?? C3 CC CC CC CC CC CC CC CC 0F B6 81 ?? ?? ?? ?? C3 CC CC CC CC CC CC CC CC 48 89 5C 24", cs2.engine)
+        .search()
+        .slice(3, 6)
+        .setName("dwNetworkGameClient_isBackgroundMap")
+    )
+
+    # dwNetworkGameClient_localPlayer
+    yield (
+        Pattern("48 83 C0 ?? 48 8D 04 40 8B 0C C1", cs2.engine)
         .search()
         .slice(3, 4)
         .add(0xE6)
-        .setName("dwNetworkGameClient_getLocalPlayer")
+        .setName("dwNetworkGameClient_localPlayer")
     )
 
-    # dwNetworkGameClient_getMaxClients
+    # dwNetworkGameClient_maxClients
     yield (
         Pattern("8B 81 ?? ?? ?? ?? C3 CC CC CC CC CC CC CC CC CC 8B 81 ?? ?? ?? ?? FF C0", cs2.engine)
         .search()
         .slice(2, 4)
-        .setName("dwNetworkGameClient_getMaxClients")
+        .setName("dwNetworkGameClient_maxClients")
+    )
+
+    # dwNetworkGameClient_serverTickCount
+    yield (
+        Pattern("8B 81 ?? ?? ?? ?? C3 CC CC CC CC CC CC CC CC CC 83 B9", cs2.engine)
+        .search()
+        .slice(2, 4)
+        .setName("dwNetworkGameClient_serverTickCount")
     )
 
     # dwNetworkGameClient_signOnState
