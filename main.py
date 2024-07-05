@@ -1,4 +1,3 @@
-from ctypes import windll
 from logging import info, error, debug
 from os import system
 from platform import system as system_name
@@ -8,12 +7,13 @@ from CS2 import CS2Process, isCS2ProcessExist, isCS2ProcessReady
 from utils import ASCII_BASAGANNIDARR_MEDIUM, loggerSetup
 
 
-def main(signature: bool = True, schema: bool = True, convar: bool = False) -> None:
+def main(signature: bool = True, schema: bool = True) -> None:
     if not system_name() == "Windows":
         error("No Support For Non-Windows Systems.")
         system("pause")
         exit()
 
+    from ctypes import windll
     if not windll.shell32.IsUserAnAdmin():
         error("Please Run As Administrator.")
         system("pause")
@@ -38,10 +38,6 @@ def main(signature: bool = True, schema: bool = True, convar: bool = False) -> N
     if schema:
         from Dumper.SchemaDump import dumpSchema
         dumpSchema()
-    if convar:
-        # Actually, convarDump is meaningless, but I still coded it I dunno why :P
-        from Dumper.ConvarDump import dumpConvar
-        dumpConvar()
 
     timeUse = (perf_counter() - timeUseCounter) * 1000
     info("All Dump Finished in %s ms" % timeUse)

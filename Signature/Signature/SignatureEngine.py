@@ -104,23 +104,6 @@ def engineSignatures() -> Sequence[Pattern]:
         .setName("dwWindowWidth")
     )
 
-    # dwSoundService
-    yield (
-        Pattern("48 89 05 ?? ?? ?? ?? 4C 8D 44 24 ?? 48 8D 05", cs2.engine)
-        .search()
-        .rip()
-        .setName("dwSoundService")
-    )
-
-    # dwEngineViewData
-    yield (
-        Pattern("48 89 05 ?? ?? ?? ?? 4C 8D 44 24 ?? 48 8D 05", cs2.engine)
-        .search()
-        .rip()
-        .add(0x9C)
-        .setName("dwEngineViewData")
-    )
-
 
 # def dwBuildNumber() -> Pattern:
 #     return (

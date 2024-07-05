@@ -11,6 +11,7 @@ from Signature.Signature.SignatureClient import clientSignatures
 from Signature.Signature.SignatureEngine import engineSignatures
 from Signature.Signature.SignatureInputsystem import inputsystemSignatures
 from Signature.Signature.SignatureMatchmaking import matchmakingSignatures
+from Signature.Signature.SignatureSoundsystem import soundsystemSignatures
 from utils import int2hex, timeUseInfo, errorButDontCloseWindow
 
 
@@ -21,8 +22,9 @@ def dumpSignature() -> None:
     engine = engineSignature()
     inputsystem = inputsystemSignature()
     matchmaking = matchmakingSignature()
+    soundsystem = soundsystemSignature()
 
-    signatureBuilder((client, engine, inputsystem, matchmaking))
+    signatureBuilder((client, engine, inputsystem, matchmaking, soundsystem))
 
 
 
@@ -145,6 +147,36 @@ def matchmakingSignature() -> ContainerModule:
     debug("Module: %s Dump Finished in %s ms" % ("matchmaking.dll", timeUse))
 
     return ContainerModule(name=cs2.matchmaking.name, signatures=signaturesCtr)
+
+
+def soundsystemSignature() -> ContainerModule:
+    signaturePatterns = soundsystemSignatures()
+    timeUseCounter = perf_counter()
+
+    debug("Module: %s" % (
+        cs2.soundsystem.name,
+        # len(patterns)
+    ))
+
+    signaturesCtr: List[ContainerSignature] = list()
+    for signature in signaturePatterns:
+        signature: Pattern
+        signatureName = signature.getName()
+
+        signatureCtr = ContainerSignature(name=signatureName, value=signature.offset, config=signature.config)
+        signaturesCtr.append(signatureCtr)
+
+        debug(" · %s -> Signature: %s (Address: %s) (Offset: %s)" % (
+            signature.pattern,
+            signatureName,
+            int2hex(signature.address),
+            int2hex(signature.offset),
+        ))
+
+    timeUse = (perf_counter() - timeUseCounter) * 1000
+    debug("Module: %s Dump Finished in %s ms" % ("soundsystem.dll", timeUse))
+
+    return ContainerModule(name=cs2.soundsystem.name, signatures=signaturesCtr)
 
 
 
